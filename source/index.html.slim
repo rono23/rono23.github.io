@@ -1,0 +1,13 @@
+.posts
+  h1 Posts
+  ul
+    - page_articles.each do |article|
+      li
+        span.date= article.date.strftime('%b %0e, %Y')
+        = link_to article.title, article
+
+.tags
+  h1 Tags
+  ul.inline
+    - blog.tags.each do |tag, articles|
+      li= link_to "#{tag} (#{articles.size})", tag_path(tag)

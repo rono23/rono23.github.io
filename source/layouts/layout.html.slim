@@ -1,0 +1,40 @@
+doctype html
+html lang="ja"
+  head
+    meta charset="utf-8"
+    meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
+    meta content="width=device-width, initial-scale=1.0" name="viewport"
+    title= data.page.title ? "#{data.page.title} - #{site_title}" : site_title
+    = feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "#{site_title} - Atom Feed"
+    = stylesheet_link_tag "all"
+    = javascript_include_tag  "all"
+    = partial 'google_analytics'
+  body
+    .header.clear
+      .l-constrained
+        h1
+          = link_to site_title, '/'
+        ul
+          li= link_to 'About', '/about'
+    .hero style="background-image: url('/images/hero/#{data.page.hero || 'default.jpg'}')"
+    .main
+      .l-constrained
+        - if is_blog_article?
+          .post-date= current_article.date.strftime('%B %e, %Y')
+          .post-title= current_article.title
+          .markdown= yield
+          .post-tags
+            ul.inline
+              li Tags:
+              - current_article.tags.each do |tag|
+                li= link_to tag, tag_path(tag)
+        - else
+          = yield
+    .footer
+      .l-constrained
+        .copy
+          | &copy;
+          '
+          = Date.today.year
+          '
+          = site_title
