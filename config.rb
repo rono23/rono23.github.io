@@ -1,8 +1,12 @@
-Time.zone = "Tokyo"
+Time.zone = 'Tokyo'
 
-set :site_url, "http://rono23.com"
-set :site_title, "rono23"
-set :site_author, "rono23"
+page '/*.xml', layout: false
+page '/*.json', layout: false
+page '/*.txt', layout: false
+
+set :site_url, 'http://rono23.com'
+set :site_title, 'rono23'
+set :site_author, 'rono23'
 
 set :markdown_engine, :redcarpet
 set :markdown, hard_wrap: true,
@@ -15,26 +19,21 @@ set :markdown, hard_wrap: true,
                strikethrough: true,
                footnotes: true
 
-set :css_dir, "stylesheets"
-set :js_dir, "javascripts"
-set :images_dir, "images"
+set :css_dir, 'stylesheets'
+set :js_dir, 'javascripts'
+set :images_dir, 'images'
 
 activate :blog do |blog|
-  blog.prefix = "posts"
-  blog.sources = "{year}-{month}-{day}.html"
-  blog.permalink = "{slug}.html"
-  blog.taglink = "tags/:tag.html"
+  blog.prefix = 'posts'
+  blog.sources = '{year}-{month}-{day}.html'
+  blog.permalink = '{slug}.html'
+  blog.taglink = 'tags/:tag.html'
   blog.tag_template = "#{blog.prefix}/tag.html"
 end
 
 activate :directory_indexes
 
-page "posts/feed.xml", layout: false
-
-activate :deploy do |deploy|
-  deploy.method = :git
-  deploy.branch = "master"
-end
+page 'posts/feed.xml', layout: false
 
 configure :development do
   activate :livereload
@@ -44,4 +43,9 @@ configure :build do
   activate :minify_css
   activate :minify_javascript
   activate :asset_hash
+end
+
+activate :deploy do |deploy|
+  deploy.deploy_method = :git
+  deploy.branch = 'master'
 end
