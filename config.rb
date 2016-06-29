@@ -25,7 +25,7 @@ set :images_dir, 'images'
 
 activate :blog do |blog|
   blog.prefix = 'posts'
-  blog.sources = '{year}-{month}-{day}.html'
+  blog.sources = '{year}-{month}-{day}-{num}.html'
   blog.permalink = '{slug}.html'
   blog.taglink = 'tags/:tag.html'
   blog.tag_template = "#{blog.prefix}/tag.html"
