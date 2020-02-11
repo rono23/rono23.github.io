@@ -8,15 +8,15 @@ Branch
 ## Installation
 
 ```
-$ git clone git@github.com:rono23/rono23.github.io.git
-$ git checkout develop
-$ bundle
-$ bundle exec middleman server
+git clone git@github.com:rono23/rono23.github.io.git
+cd rono23.github.io
+bundle
+bundle exec middleman server
 ```
 
 ## Deploy
 
 ```
-$ bundle exec middleman build
-$ bundle exec middleman deploy
+bundle exec middleman build
+bundle exec middleman deploy
 ```
