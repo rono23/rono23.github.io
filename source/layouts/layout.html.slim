@@ -21,7 +21,10 @@ html lang="#{current_article&.lang || 'en'}"
         - if is_blog_article?
           .post-date= current_article.date.strftime('%B %e, %Y')
           .post-title= current_article.title
-          .markdown= yield
+          .markdown
+            = yield
+          .post-comment
+            p= link_to "Post a comment on GitHub", "https://github.com/rono23/rono23.github.io/issues/new?title=[#{current_article.slug}] "
           .post-tags
             ul.inline
               li Tags:
