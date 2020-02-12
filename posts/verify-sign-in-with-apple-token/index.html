@@ -43,7 +43,7 @@ decoded_token[0][&quot;c_hash&quot;] == c_hash
 
 <h4>nonceの検証</h4>
 
-<p>クライアント側で設定後、サーバーで検証する。クライアント側の実装は<a href="https://github.com/firebase/quickstart-ios/blob/112bdec24e30b333a14ca72b5976afe3d765e1b1/authentication/AuthenticationExampleSwift/MainViewController.swift#L816">firebase/quickstart-ios</a>が参考になるかも。<br>
+<p>クライアントの実装は<a href="https://github.com/firebase/quickstart-ios/blob/112bdec24e30b333a14ca72b5976afe3d765e1b1/authentication/AuthenticationExampleSwift/MainViewController.swift#L816">firebase/quickstart-ios</a>が参考になるかも。<br>
 iOS 13から<a href="https://developer.apple.com/documentation/cryptokit">CryptoKit</a>が導入されたので、quickstart-ios的なnonceの生成は以下みたいな感じでもOKかな 🤔</p>
 
 <pre><code># クライアント
@@ -58,7 +58,7 @@ request.nonce = SHA256.hash(data: data).compactMap { String(format: &quot;%02x&q
 decoded_token[0][&quot;nonce&quot;] == Digest::SHA256.hexdigest(rawNonce)
 </code></pre>
 
-<p>iOS 12以下をサポートしている場合、<a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026">Weak link</a>する必要があるので忘れずに。</p>
+<p>iOS 12以下をサポートしている場合、<a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026">weak link</a>する必要があるので忘れずに。</p>
 
 <blockquote>
 <p>Targets &gt; APP &gt; Build Settings &gt; Other Linker Flags に <code>-weak_framework CryptoKit</code> を追加</p>
@@ -76,5 +76,5 @@ decoded_token[0][&quot;nonce&quot;] == Digest::SHA256.hexdigest(rawNonce)
 
 <hr>
 
-<p>JWTは曖昧な理解で、JWSやJWKは知らなかったので、色々と勉強になりました 💪</p>
-</div><div class="post-comment"><p><a href="https://github.com/rono23/rono23.github.io/issues/new?title=[verify-sign-in-with-apple]%20">Post a comment on GitHub</a></p></div><div class="post-tags"><ul class="inline"><li>Tags:</li><li><a href="/posts/tags/ios/">ios</a></li><li><a href="/posts/tags/ruby/">ruby</a></li></ul></div></div></div><div class="footer"><div class="l-constrained"><div class="copy">&copy; 2020 rono23</div></div></div></body></html>
+<p>JWTは曖昧な理解、JWSやJWKは知らなかったので、色々と勉強になりました 💪</p>
+</div><div class="post-comment"><p><a href="https://github.com/rono23/rono23.github.io/issues/new?title=[verify-sign-in-with-apple-token]%20">Post a comment on GitHub</a></p></div><div class="post-tags"><ul class="inline"><li>Tags:</li><li><a href="/posts/tags/ios/">ios</a></li><li><a href="/posts/tags/ruby/">ruby</a></li></ul></div></div></div><div class="footer"><div class="l-constrained"><div class="copy">&copy; 2020 rono23</div></div></div></body></html>

@@ -10,10 +10,10 @@
   </author>
   <entry>
     <title>Appleでサインインのトークン検証</title>
-    <link rel="alternate" href="https://rono23.com/posts/verify-sign-in-with-apple/"/>
-    <id>https://rono23.com/posts/verify-sign-in-with-apple/</id>
+    <link rel="alternate" href="https://rono23.com/posts/verify-sign-in-with-apple-token/"/>
+    <id>https://rono23.com/posts/verify-sign-in-with-apple-token/</id>
     <published>2020-02-12T00:00:00+09:00</published>
-    <updated>2020-02-12T21:14:36+09:00</updated>
+    <updated>2020-02-12T22:42:24+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
@@ -53,7 +53,7 @@ decoded_token[0][&amp;quot;c_hash&amp;quot;] == c_hash
 
 &lt;h4&gt;nonceの検証&lt;/h4&gt;
 
-&lt;p&gt;クライアント側で設定後、サーバーで検証する。クライアント側の実装は&lt;a href="https://github.com/firebase/quickstart-ios/blob/112bdec24e30b333a14ca72b5976afe3d765e1b1/authentication/AuthenticationExampleSwift/MainViewController.swift#L816"&gt;firebase/quickstart-ios&lt;/a&gt;が参考になるかも。&lt;br&gt;
+&lt;p&gt;クライアントの実装は&lt;a href="https://github.com/firebase/quickstart-ios/blob/112bdec24e30b333a14ca72b5976afe3d765e1b1/authentication/AuthenticationExampleSwift/MainViewController.swift#L816"&gt;firebase/quickstart-ios&lt;/a&gt;が参考になるかも。&lt;br&gt;
 iOS 13から&lt;a href="https://developer.apple.com/documentation/cryptokit"&gt;CryptoKit&lt;/a&gt;が導入されたので、quickstart-ios的なnonceの生成は以下みたいな感じでもOKかな 🤔&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;# クライアント
@@ -68,7 +68,7 @@ request.nonce = SHA256.hash(data: data).compactMap { String(format: &amp;quot;%0
 decoded_token[0][&amp;quot;nonce&amp;quot;] == Digest::SHA256.hexdigest(rawNonce)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;iOS 12以下をサポートしている場合、&lt;a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026"&gt;Weak link&lt;/a&gt;する必要があるので忘れずに。&lt;/p&gt;
+&lt;p&gt;iOS 12以下をサポートしている場合、&lt;a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026"&gt;weak link&lt;/a&gt;する必要があるので忘れずに。&lt;/p&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;Targets &amp;gt; APP &amp;gt; Build Settings &amp;gt; Other Linker Flags に &lt;code&gt;-weak_framework CryptoKit&lt;/code&gt; を追加&lt;/p&gt;
@@ -86,7 +86,7 @@ decoded_token[0][&amp;quot;nonce&amp;quot;] == Digest::SHA256.hexdigest(rawNonce
 
 &lt;hr&gt;
 
-&lt;p&gt;JWTは曖昧な理解で、JWSやJWKは知らなかったので、色々と勉強になりました 💪&lt;/p&gt;
+&lt;p&gt;JWTは曖昧な理解、JWSやJWKは知らなかったので、色々と勉強になりました 💪&lt;/p&gt;
 </content>
   </entry>
   <entry>
