@@ -4,27 +4,108 @@
   <id>https://rono23.com/posts</id>
   <link href="https://rono23.com/posts"/>
   <link href="https://rono23.com/posts/feed.xml" rel="self"/>
-  <updated>2019-08-22T00:00:00+09:00</updated>
+  <updated>2020-02-12T00:00:00+09:00</updated>
   <author>
     <name>rono23</name>
   </author>
+  <entry>
+    <title>Appleでサインインのトークン検証</title>
+    <link rel="alternate" href="https://rono23.com/posts/verify-sign-in-with-apple/"/>
+    <id>https://rono23.com/posts/verify-sign-in-with-apple/</id>
+    <published>2020-02-12T00:00:00+09:00</published>
+    <updated>2020-02-12T21:14:36+09:00</updated>
+    <author>
+      <name>rono23</name>
+    </author>
+    <content type="html">&lt;h4&gt;セットアップ&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;# Gemfile
+gem &amp;#39;jwt&amp;#39;
+
+# クライアントから送られてきたパラメータ
+token = &amp;#39;identityToken&amp;#39;
+code = &amp;quot;authorizationCode&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;署名検証&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;url = &amp;quot;https://appleid.apple.com/auth/keys&amp;quot;
+jwks = JSON.parse(open(url).read, symbolize_names: true)
+algorithms = jwks[:keys].map { |key| key[:alg] } # or tokenのHeaderの:alg
+decoded_token = JWT.decode(token, nil, true, algorithms: algorithms, jwks: jwks)
+
+# 1つのJWKだけ検証したいとき
+jwk = jwks[:keys].first
+public_key = JWT::JWK.import(jwk).keypair.public_key # or `JWT::JWK::RSA.import(jwk).public_key`
+decoded_token = JWT.decode(token, public_key, true, algorithm: &amp;quot;RS256&amp;quot;)
+
+# 期限は10分なので注意
+JWT.decode(...) #=&amp;gt; JWT::ExpiredSignature: Signature has expired
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;authorizationCodeの検証&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;# https://openid.net/specs/openid-connect-core-1_0.html#CodeValidation
+digest = Digest::SHA256.digest(code)
+c_hash = Base64.urlsafe_encode64(digest[0, digest.size/2], padding: false)
+decoded_token[0][&amp;quot;c_hash&amp;quot;] == c_hash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;nonceの検証&lt;/h4&gt;
+
+&lt;p&gt;クライアント側で設定後、サーバーで検証する。クライアント側の実装は&lt;a href="https://github.com/firebase/quickstart-ios/blob/112bdec24e30b333a14ca72b5976afe3d765e1b1/authentication/AuthenticationExampleSwift/MainViewController.swift#L816"&gt;firebase/quickstart-ios&lt;/a&gt;が参考になるかも。&lt;br&gt;
+iOS 13から&lt;a href="https://developer.apple.com/documentation/cryptokit"&gt;CryptoKit&lt;/a&gt;が導入されたので、quickstart-ios的なnonceの生成は以下みたいな感じでもOKかな 🤔&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# クライアント
+import CryptoKit
+
+let uuid = CFUUIDCreateString(nil, CFUUIDCreate(nil))!
+let rawNonce = NSString(string: uuid).replacingOccurrences(of: &amp;quot;-&amp;quot;, with: &amp;quot;&amp;quot;)
+let data = rawNonce.data(using: .utf8)!
+request.nonce = SHA256.hash(data: data).compactMap { String(format: &amp;quot;%02x&amp;quot;, $0) }.joined()
+
+# サーバー
+decoded_token[0][&amp;quot;nonce&amp;quot;] == Digest::SHA256.hexdigest(rawNonce)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;iOS 12以下をサポートしている場合、&lt;a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026"&gt;Weak link&lt;/a&gt;する必要があるので忘れずに。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Targets &amp;gt; APP &amp;gt; Build Settings &amp;gt; Other Linker Flags に &lt;code&gt;-weak_framework CryptoKit&lt;/code&gt; を追加&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4&gt;リンク&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://openid-foundation-japan.github.io/draft-ietf-oauth-json-web-token-11.ja.html"&gt;JSON Web Token (JWT)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://openid-foundation-japan.github.io/draft-ietf-jose-json-web-signature-14.ja.html#kidDef"&gt;JSON Web Signature (JWS)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://openid-foundation-japan.github.io/rfc7517.ja.html#kidDef"&gt;JSON Web Key (JWK)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/jwt/ruby-jwt"&gt;jwt/ruby-jwt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://developer.apple.com/documentation/signinwithapplerestapi"&gt;Sign in with Apple REST API | Apple Developer Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;JWTは曖昧な理解で、JWSやJWKは知らなかったので、色々と勉強になりました 💪&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>fastlaneのadd_badgeで数字が潰れる</title>
     <link rel="alternate" href="https://rono23.com/posts/shrunk-badge/"/>
     <id>https://rono23.com/posts/shrunk-badge/</id>
     <published>2019-08-22T00:00:00+09:00</published>
-    <updated>2020-02-11T23:08:43+09:00</updated>
+    <updated>2020-02-12T09:56:41+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
-    <content type="html">&lt;p&gt;アプリのアイコンにビルド番号などを追加してたけど、その数字が&lt;a href="https://github.com/HazAT/badge/issues/91"&gt;潰れる問題&lt;/a&gt;が発生…！&lt;br&gt;
+    <content type="html">&lt;p&gt;アプリのアイコンにビルド番号などを追加してたけど、その数字が&lt;a href="https://github.com/HazAT/badge/issues/91"&gt;潰れる問題&lt;/a&gt;が発生。&lt;br&gt;
 &lt;code&gt;pango 1.42.4&lt;/code&gt; だとOKとコメントがあったので、取り急ぎ古いバージョンをインストールして対処できた。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
 
 ## You need to fetch when commit log was grafted
 # git log pango.rb
-# git fetch --depth 10000
+# git fetch --depth 50000
 
 git checkout a8ac7ea5fe9339558c9fbe49acaa1a2452bcd4d0 pango.rb
 brew reinstall pango
@@ -37,6 +118,8 @@ brew list --versions | grep pango #=&amp;gt; pango 1.42.4_2
 
 &lt;pre&gt;&lt;code&gt;brew unpin pango
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;追記：もっと簡単なやり方が&lt;a href="https://github.com/HazAT/badge/issues/91#issuecomment-534866597"&gt;コメント&lt;/a&gt;されてました。&lt;/p&gt;
 </content>
   </entry>
   <entry>
@@ -279,68 +362,6 @@ module.exports = environment.toWebpackConfig()
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;code&gt;options&lt;/code&gt; の設定は&lt;a href="https://github.com/MoOx/eslint-loader#options"&gt;公式&lt;/a&gt;を参考に、例えば &lt;code&gt;failOnWarning: true&lt;/code&gt; だとbuildに失敗してコンソールやログにエラーが表示されて、 &lt;code&gt;failOnWarning: false&lt;/code&gt; にするとbuildはとおってログにだけメッセージが残る。&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Google Domainsに移管してみた</title>
-    <link rel="alternate" href="https://rono23.com/posts/transfer-domain-to-google-domains/"/>
-    <id>https://rono23.com/posts/transfer-domain-to-google-domains/</id>
-    <published>2017-09-07T00:00:00+09:00</published>
-    <updated>2020-02-11T23:08:43+09:00</updated>
-    <author>
-      <name>rono23</name>
-    </author>
-    <content type="html">&lt;p&gt;ムームードメインから&lt;a href="https://domains.google.com/"&gt;Google Domains&lt;/a&gt;にドメインを移管してみたけど、申請から完了まで90分位でできた。&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;ムームードメインで、WHOIS情報を自身のに変更&lt;/li&gt;
-&lt;li&gt;ムームードメインで、「ドメイン操作」 &amp;gt; 「ドメイン一覧」 &amp;gt; ドメインをクリックして、認証コードをメモ&lt;/li&gt;
-&lt;li&gt;Google Domainsの&lt;a href="https://domains.google.com/registrar#t=t"&gt;ドメインの移管&lt;/a&gt;から、ドメインを入力して申請&lt;/li&gt;
-&lt;li&gt;Googleから移管確認のメールが来るのでOKする&lt;/li&gt;
-&lt;li&gt;ムームードメインから移管申請確認メールが来るのでOKする&lt;/li&gt;
-&lt;li&gt;Google Domains のネームサーバーを使用するようにして、レコード周りを追加&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;メールの送受信について&lt;/h4&gt;
-
-&lt;p&gt;Google Domains のネームサーバーを利用していると、&lt;a href="https://support.google.com/domains/answer/3251241?hl=ja"&gt;メール エイリアスを作成して転送&lt;/a&gt;できるので便利。&lt;br&gt;
-例えば &lt;code&gt;hello@rono23.com&lt;/code&gt; を &lt;code&gt;rono23@gmail.com&lt;/code&gt; に転送できるので、メールの受信は簡単。&lt;/p&gt;
-
-&lt;p&gt;一方で、メールの送信は、&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;送信したいGmailアカウントで、&lt;a href="https://support.google.com/accounts/answer/185839?hl=ja"&gt;2段階認証を有効&lt;/a&gt;にする&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://myaccount.google.com/apppasswords"&gt;アプリ パスワード&lt;/a&gt; &amp;gt; 「アプリを選択」 &amp;gt; 「その他（名前を入力）」 &amp;gt; 好きな名前を入力（例: rono23.com） &amp;gt; パスワードをメモ&lt;/li&gt;
-&lt;li&gt;Gmail &amp;gt; 「設定」 &amp;gt; 「アカウントとインポート」 &amp;gt; 「他のメール アドレスを追加」 &amp;gt; 名前、メールアドレスを入力 &amp;gt; 下記入力&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;SMTP サーバー&lt;/th&gt;
-&lt;th&gt;ポート&lt;/th&gt;
-&lt;th&gt;ユーザー名&lt;/th&gt;
-&lt;th&gt;パスワード&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;smtp.gmail.com&lt;/td&gt;
-&lt;td&gt;465&lt;/td&gt;
-&lt;td&gt;ログインしているGmailアカウント（メールアドレス）&lt;/td&gt;
-&lt;td&gt;2. のパスワード&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-
-&lt;p&gt;※ &lt;a href="https://support.google.com/domains/answer/3251241?hl=ja"&gt;メール転送&lt;/a&gt;の「転送されたメールアドレスからメールを送信するには」参照&lt;/p&gt;
-
-&lt;h4&gt;感想・備忘録&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;.jp&lt;/code&gt; ドメインの購入や移管はまだ非対応&lt;/li&gt;
-&lt;li&gt;平日の午前中に移管したので、休日や深夜だともっと時間かかるかも&lt;/li&gt;
-&lt;li&gt;ムームードメインのアカウントが不要になったので、管理するアカウントが1つ減って嬉しい&lt;/li&gt;
-&lt;li&gt;ドメイン代はちょっと高い。例えば &lt;code&gt;.com&lt;/code&gt; は、ムームードメインやお名前.comは1,040円、Google Domainsは1,400円&lt;/li&gt;
-&lt;li&gt;Google Domainsを日本語で使っていたら、コンソールにローカライズエラーがでて動かなくなったけど、英語に切り替えたら直った&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>

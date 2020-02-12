@@ -7,14 +7,14 @@
   ga('create', 'UA-845284-7', 'auto');
   ga('send', 'pageview');
 </script>
-</head><body><div class="header clear"><div class="l-constrained"><h1><a href="/">rono23</a></h1><ul><li><a href="/about">About</a></li></ul></div></div><div class="hero" style="background-image: url('/images/hero/default-71bf53ff.jpg')"></div><div class="main"><div class="l-constrained"><div class="post-date">August 22, 2019</div><div class="post-title">fastlaneのadd_badgeで数字が潰れる</div><div class="markdown"><p>アプリのアイコンにビルド番号などを追加してたけど、その数字が<a href="https://github.com/HazAT/badge/issues/91">潰れる問題</a>が発生…！<br>
+</head><body><div class="header clear"><div class="l-constrained"><h1><a href="/">rono23</a></h1><ul><li><a href="/about">About</a></li></ul></div></div><div class="hero" style="background-image: url('/images/hero/default-71bf53ff.jpg')"></div><div class="main"><div class="l-constrained"><div class="post-date">August 22, 2019</div><div class="post-title">fastlaneのadd_badgeで数字が潰れる</div><div class="markdown"><p>アプリのアイコンにビルド番号などを追加してたけど、その数字が<a href="https://github.com/HazAT/badge/issues/91">潰れる問題</a>が発生。<br>
 <code>pango 1.42.4</code> だとOKとコメントがあったので、取り急ぎ古いバージョンをインストールして対処できた。</p>
 
 <pre><code>cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
 
 ## You need to fetch when commit log was grafted
 # git log pango.rb
-# git fetch --depth 10000
+# git fetch --depth 50000
 
 git checkout a8ac7ea5fe9339558c9fbe49acaa1a2452bcd4d0 pango.rb
 brew reinstall pango
@@ -27,4 +27,6 @@ brew list --versions | grep pango #=&gt; pango 1.42.4_2
 
 <pre><code>brew unpin pango
 </code></pre>
+
+<p>追記：もっと簡単なやり方が<a href="https://github.com/HazAT/badge/issues/91#issuecomment-534866597">コメント</a>されてました。</p>
 </div><div class="post-comment"><p><a href="https://github.com/rono23/rono23.github.io/issues/new?title=[shrunk-badge]%20">Post a comment on GitHub</a></p></div><div class="post-tags"><ul class="inline"><li>Tags:</li><li><a href="/posts/tags/ios/">ios</a></li></ul></div></div></div><div class="footer"><div class="l-constrained"><div class="copy">&copy; 2020 rono23</div></div></div></body></html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1.0" name="viewport" /><title>Appleでサインインのトークン検証 - rono23</title><link rel="alternate" type="application/atom+xml" title="rono23 - Atom Feed" href="/posts/feed.xml" /><link href="/stylesheets/all-42c2128f.css" rel="stylesheet" /><script src="/javascripts/all-da39a3ee.js"></script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-845284-7', 'auto');
+  ga('send', 'pageview');
+</script>
+</head><body><div class="header clear"><div class="l-constrained"><h1><a href="/">rono23</a></h1><ul><li><a href="/about">About</a></li></ul></div></div><div class="hero" style="background-image: url('/images/hero/default-71bf53ff.jpg')"></div><div class="main"><div class="l-constrained"><div class="post-date">February 12, 2020</div><div class="post-title">Appleでサインインのトークン検証</div><div class="markdown"><h4>セットアップ</h4>
+
+<pre><code># Gemfile
+gem &#39;jwt&#39;
+
+# クライアントから送られてきたパラメータ
+token = &#39;identityToken&#39;
+code = &quot;authorizationCode&#39;
+</code></pre>
+
+<h4>署名検証</h4>
+
+<pre><code>url = &quot;https://appleid.apple.com/auth/keys&quot;
+jwks = JSON.parse(open(url).read, symbolize_names: true)
+algorithms = jwks[:keys].map { |key| key[:alg] } # or tokenのHeaderの:alg
+decoded_token = JWT.decode(token, nil, true, algorithms: algorithms, jwks: jwks)
+
+# 1つのJWKだけ検証したいとき
+jwk = jwks[:keys].first
+public_key = JWT::JWK.import(jwk).keypair.public_key # or `JWT::JWK::RSA.import(jwk).public_key`
+decoded_token = JWT.decode(token, public_key, true, algorithm: &quot;RS256&quot;)
+
+# 期限は10分なので注意
+JWT.decode(...) #=&gt; JWT::ExpiredSignature: Signature has expired
+</code></pre>
+
+<h4>authorizationCodeの検証</h4>
+
+<pre><code># https://openid.net/specs/openid-connect-core-1_0.html#CodeValidation
+digest = Digest::SHA256.digest(code)
+c_hash = Base64.urlsafe_encode64(digest[0, digest.size/2], padding: false)
+decoded_token[0][&quot;c_hash&quot;] == c_hash
+</code></pre>
+
+<h4>nonceの検証</h4>
+
+<p>クライアント側で設定後、サーバーで検証する。クライアント側の実装は<a href="https://github.com/firebase/quickstart-ios/blob/112bdec24e30b333a14ca72b5976afe3d765e1b1/authentication/AuthenticationExampleSwift/MainViewController.swift#L816">firebase/quickstart-ios</a>が参考になるかも。<br>
+iOS 13から<a href="https://developer.apple.com/documentation/cryptokit">CryptoKit</a>が導入されたので、quickstart-ios的なnonceの生成は以下みたいな感じでもOKかな 🤔</p>
+
+<pre><code># クライアント
+import CryptoKit
+
+let uuid = CFUUIDCreateString(nil, CFUUIDCreate(nil))!
+let rawNonce = NSString(string: uuid).replacingOccurrences(of: &quot;-&quot;, with: &quot;&quot;)
+let data = rawNonce.data(using: .utf8)!
+request.nonce = SHA256.hash(data: data).compactMap { String(format: &quot;%02x&quot;, $0) }.joined()
+
+# サーバー
+decoded_token[0][&quot;nonce&quot;] == Digest::SHA256.hexdigest(rawNonce)
+</code></pre>
+
+<p>iOS 12以下をサポートしている場合、<a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026">Weak link</a>する必要があるので忘れずに。</p>
+
+<blockquote>
+<p>Targets &gt; APP &gt; Build Settings &gt; Other Linker Flags に <code>-weak_framework CryptoKit</code> を追加</p>
+</blockquote>
+
+<h4>リンク</h4>
+
+<ul>
+<li><a href="https://openid-foundation-japan.github.io/draft-ietf-oauth-json-web-token-11.ja.html">JSON Web Token (JWT)</a></li>
+<li><a href="https://openid-foundation-japan.github.io/draft-ietf-jose-json-web-signature-14.ja.html#kidDef">JSON Web Signature (JWS)</a></li>
+<li><a href="https://openid-foundation-japan.github.io/rfc7517.ja.html#kidDef">JSON Web Key (JWK)</a></li>
+<li><a href="https://github.com/jwt/ruby-jwt">jwt/ruby-jwt</a></li>
+<li><a href="https://developer.apple.com/documentation/signinwithapplerestapi">Sign in with Apple REST API | Apple Developer Documentation</a></li>
+</ul>
+
+<hr>
+
+<p>JWTは曖昧な理解で、JWSやJWKは知らなかったので、色々と勉強になりました 💪</p>
+</div><div class="post-comment"><p><a href="https://github.com/rono23/rono23.github.io/issues/new?title=[verify-sign-in-with-apple]%20">Post a comment on GitHub</a></p></div><div class="post-tags"><ul class="inline"><li>Tags:</li><li><a href="/posts/tags/ios/">ios</a></li><li><a href="/posts/tags/ruby/">ruby</a></li></ul></div></div></div><div class="footer"><div class="l-constrained"><div class="copy">&copy; 2020 rono23</div></div></div></body></html>
