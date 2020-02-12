@@ -4,7 +4,7 @@ page '/*.xml', layout: false
 page '/*.json', layout: false
 page '/*.txt', layout: false
 
-set :site_url, 'http://rono23.com'
+set :site_url, 'https://rono23.com'
 set :site_title, 'rono23'
 set :site_author, 'rono23'
 
