@@ -10,11 +10,11 @@
 </head><body><div class="header clear"><div class="l-constrained"><h1><a href="/">rono23</a></h1><ul><li><a href="/about">About</a></li></ul></div></div><div class="hero" style="background-image: url('/images/hero/default-71bf53ff.jpg')"></div><div class="main"><div class="l-constrained"><div class="post-date">February 12, 2020</div><div class="post-title">Appleでサインインのトークン検証</div><div class="markdown"><h4>セットアップ</h4>
 
 <pre><code># Gemfile
-gem &#39;jwt&#39;
+gem &quot;jwt&quot;
 
 # クライアントから送られてきたパラメータ
-token = &#39;identityToken&#39;
-code = &quot;authorizationCode&#39;
+token = &quot;identityToken&quot;
+code = &quot;authorizationCode&quot;
 </code></pre>
 
 <h4>署名検証</h4>
@@ -76,5 +76,5 @@ decoded_token[0][&quot;nonce&quot;] == Digest::SHA256.hexdigest(rawNonce)
 
 <hr>
 
-<p>JWTは曖昧な理解、JWSやJWKは知らなかったので、色々と勉強になりました 💪</p>
+<p>➡️ <a href="/posts/sign-in-with-apple-tokens">Appleでサインインのアクセストークンとリフレッシュトークンの取得</a>に続く</p>
 </div><div class="post-comment"><p><a href="https://github.com/rono23/rono23.github.io/issues/new?title=[verify-sign-in-with-apple-token]%20">Post a comment on GitHub</a></p></div><div class="post-tags"><ul class="inline"><li>Tags:</li><li><a href="/posts/tags/ios/">ios</a></li><li><a href="/posts/tags/ruby/">ruby</a></li></ul></div></div></div><div class="footer"><div class="l-constrained"><div class="copy">&copy; 2020 rono23</div></div></div></body></html>

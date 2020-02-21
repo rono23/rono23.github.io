@@ -4,27 +4,105 @@
   <id>https://rono23.com/posts</id>
   <link href="https://rono23.com/posts"/>
   <link href="https://rono23.com/posts/feed.xml" rel="self"/>
-  <updated>2020-02-12T00:00:00+09:00</updated>
+  <updated>2020-02-19T00:00:00+09:00</updated>
   <author>
     <name>rono23</name>
   </author>
+  <entry>
+    <title>Appleでサインインのアクセストークンとリフレッシュトークンの取得</title>
+    <link rel="alternate" href="https://rono23.com/posts/sign-in-with-apple-tokens/"/>
+    <id>https://rono23.com/posts/sign-in-with-apple-tokens/</id>
+    <published>2020-02-19T00:00:00+09:00</published>
+    <updated>2020-02-21T20:36:02+09:00</updated>
+    <author>
+      <name>rono23</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="/posts/verify-sign-in-with-apple-token/"&gt;Appleでサインインのトークン検証&lt;/a&gt;の続き。&lt;/p&gt;
+
+&lt;h4&gt;セットアップ&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;# Gemfile
+gem &amp;quot;jwt&amp;quot;
+
+# クライアントから送られてきたパラメータ
+code = &amp;quot;authorizationCode&amp;quot;
+
+# アプリのID（decoded_token[0][:aud]）
+client_id = &amp;quot;com.example.app&amp;quot;
+
+# https://developer.apple.com/account/#/membership
+team_id = &amp;quot;xxx&amp;quot;
+
+# https://developer.apple.com/account/resources/authkeys/list
+key_id = &amp;quot;xxx&amp;quot;
+key_file = File.read(Rails.root.join(&amp;quot;AuthKey_xxx.p8&amp;quot;))
+key = OpenSSL::PKey::EC.new(key_file)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;&lt;code&gt;access_token/refresh_token&lt;/code&gt; の取得&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;headers = {
+  kid: key_id,
+  alg: &amp;quot;ES256&amp;quot;
+}
+claims = {
+  iss: team_id,
+  sub: client_id,
+  iat: Time.now.to_i,
+  exp: Time.now.to_i + 1.day.to_i * 180,
+  aud: &amp;quot;https://appleid.apple.com&amp;quot;
+}
+client_secret = JWT.encode claims, key, &amp;quot;ES256&amp;quot;, headers
+params = {
+  client_id: client_id,
+  client_secret: client_secret,
+  code: code,
+  grant_type: &amp;quot;authorization_code&amp;quot;
+}
+response = Net::HTTP.post_form(URI.parse(&amp;quot;https://appleid.apple.com/auth/token&amp;quot;), params)
+json = JSON.parse(response.body, symbolize_names: true)
+#=&amp;gt; {:access_token=&amp;gt;&amp;quot;xxx&amp;quot;, :token_type=&amp;gt;&amp;quot;Bearer&amp;quot;, :expires_in=&amp;gt;3600, :refresh_token=&amp;gt;&amp;quot;xxx&amp;quot;, :id_token=&amp;gt;&amp;quot;xxx&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;&lt;code&gt;refresh_token&lt;/code&gt; を利用して &lt;code&gt;access_token&lt;/code&gt; を取得&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;params = {
+  client_id: client_id,
+  client_secret: client_secret,
+  refresh_token: json[:refresh_token],
+  grant_type: &amp;quot;refresh_token&amp;quot;
+}
+response = Net::HTTP.post_form(URI.parse(&amp;quot;https://appleid.apple.com/auth/token&amp;quot;), params)
+json = JSON.parse(response.body, symbolize_names: true)
+#=&amp;gt; {:access_token=&amp;gt;&amp;quot;xxx&amp;quot;, :token_type=&amp;gt;&amp;quot;Bearer&amp;quot;, :expires_in=&amp;gt;3600}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;リンク&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://developer.apple.com/documentation/signinwithapplerestapi/generate_and_validate_tokens"&gt;Generate and validate tokens - Sign in with Apple REST API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://developer.apple.com/documentation/signinwithapplerestapi/tokenresponse"&gt;TokenResponse - Sign in with Apple REST API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://developer.apple.com/documentation/signinwithapplerestapi/errorresponse"&gt;ErrorResponse - Sign in with Apple REST API&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
   <entry>
     <title>Appleでサインインのトークン検証</title>
     <link rel="alternate" href="https://rono23.com/posts/verify-sign-in-with-apple-token/"/>
     <id>https://rono23.com/posts/verify-sign-in-with-apple-token/</id>
     <published>2020-02-12T00:00:00+09:00</published>
-    <updated>2020-02-12T22:42:24+09:00</updated>
+    <updated>2020-02-21T20:36:15+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
     <content type="html">&lt;h4&gt;セットアップ&lt;/h4&gt;
 
 &lt;pre&gt;&lt;code&gt;# Gemfile
-gem &amp;#39;jwt&amp;#39;
+gem &amp;quot;jwt&amp;quot;
 
 # クライアントから送られてきたパラメータ
-token = &amp;#39;identityToken&amp;#39;
-code = &amp;quot;authorizationCode&amp;#39;
+token = &amp;quot;identityToken&amp;quot;
+code = &amp;quot;authorizationCode&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h4&gt;署名検証&lt;/h4&gt;
@@ -86,7 +164,7 @@ decoded_token[0][&amp;quot;nonce&amp;quot;] == Digest::SHA256.hexdigest(rawNonce
 
 &lt;hr&gt;
 
-&lt;p&gt;JWTは曖昧な理解、JWSやJWKは知らなかったので、色々と勉強になりました 💪&lt;/p&gt;
+&lt;p&gt;➡️ &lt;a href="/posts/sign-in-with-apple-tokens"&gt;Appleでサインインのアクセストークンとリフレッシュトークンの取得&lt;/a&gt;に続く&lt;/p&gt;
 </content>
   </entry>
   <entry>
@@ -316,52 +394,6 @@ accept_confirm { click_button I18n.t(:subscribe) }
 &lt;li&gt;&lt;a href="https://sites.google.com/a/chromium.org/chromedriver/getting-started"&gt;ChromeDriver - WebDriver for Chrome&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://github.com/flavorjones/chromedriver-helper"&gt;flavorjones/chromedriver-helper&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Webpackerで入れたVueにESLintを使う</title>
-    <link rel="alternate" href="https://rono23.com/posts/vue-with-eslint-on-webpacker/"/>
-    <id>https://rono23.com/posts/vue-with-eslint-on-webpacker/</id>
-    <published>2017-09-08T00:00:00+09:00</published>
-    <updated>2020-02-11T23:08:43+09:00</updated>
-    <author>
-      <name>rono23</name>
-    </author>
-    <content type="html">&lt;p&gt;インストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;yarn add --dev eslint eslint-loader eslint-plugin-import eslint-config-airbnb-base eslint-plugin-vue@beta
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;設定&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// .eslintrc
-{
-  env: {
-    browser: true
-  },
-  &amp;#39;extends&amp;#39;: [
-    &amp;#39;airbnb-base&amp;#39;,
-    &amp;#39;plugin:vue/recommended&amp;#39;
-  ]
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;// config/webpack/development.js
-const environment = require(&amp;#39;./environment&amp;#39;)
-
-environment.loaders.set(&amp;#39;eslint&amp;#39;, {
-  test: /\.(js|vue)$/,
-  loader: &amp;#39;eslint-loader&amp;#39;,
-  enforce: &amp;#39;pre&amp;#39;,
-  options: {
-    failOnWarning: true
-  }
-})
-
-module.exports = environment.toWebpackConfig()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;options&lt;/code&gt; の設定は&lt;a href="https://github.com/MoOx/eslint-loader#options"&gt;公式&lt;/a&gt;を参考に、例えば &lt;code&gt;failOnWarning: true&lt;/code&gt; だとbuildに失敗してコンソールやログにエラーが表示されて、 &lt;code&gt;failOnWarning: false&lt;/code&gt; にするとbuildはとおってログにだけメッセージが残る。&lt;/p&gt;
 </content>
   </entry>
 </feed>
