@@ -22,12 +22,12 @@ code = &quot;authorizationCode&quot;
 <pre><code>url = &quot;https://appleid.apple.com/auth/keys&quot;
 jwks = JSON.parse(open(url).read, symbolize_names: true)
 algorithms = jwks[:keys].map { |key| key[:alg] } # or tokenのHeaderの:alg
-decoded_token = JWT.decode(token, nil, true, algorithms: algorithms, jwks: jwks)
+decoded_token = JWT.decode(token, nil, true, algorithms: algorithms, jwks: jwks).first.with_indifferent_access
 
 # 1つのJWKだけ検証したいとき
 jwk = jwks[:keys].first
 public_key = JWT::JWK.import(jwk).keypair.public_key # or `JWT::JWK::RSA.import(jwk).public_key`
-decoded_token = JWT.decode(token, public_key, true, algorithm: &quot;RS256&quot;)
+JWT.decode(token, public_key, true, algorithm: &quot;RS256&quot;)
 
 # 期限は10分なので注意
 JWT.decode(...) #=&gt; JWT::ExpiredSignature: Signature has expired
@@ -38,7 +38,7 @@ JWT.decode(...) #=&gt; JWT::ExpiredSignature: Signature has expired
 <pre><code># https://openid.net/specs/openid-connect-core-1_0.html#CodeValidation
 digest = Digest::SHA256.digest(code)
 c_hash = Base64.urlsafe_encode64(digest[0, digest.size/2], padding: false)
-decoded_token[0][&quot;c_hash&quot;] == c_hash
+decoded_token[:c_hash] == c_hash
 </code></pre>
 
 <h4>nonceの検証</h4>
@@ -55,7 +55,7 @@ let data = rawNonce.data(using: .utf8)!
 request.nonce = SHA256.hash(data: data).compactMap { String(format: &quot;%02x&quot;, $0) }.joined()
 
 # サーバー
-decoded_token[0][&quot;nonce&quot;] == Digest::SHA256.hexdigest(rawNonce)
+decoded_token[:nonce] == Digest::SHA256.hexdigest(rawNonce)
 </code></pre>
 
 <p>iOS 12以下をサポートしている場合、<a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026">weak link</a>する必要があるので忘れずに。</p>

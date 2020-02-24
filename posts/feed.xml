@@ -13,7 +13,7 @@
     <link rel="alternate" href="https://rono23.com/posts/sign-in-with-apple-tokens/"/>
     <id>https://rono23.com/posts/sign-in-with-apple-tokens/</id>
     <published>2020-02-19T00:00:00+09:00</published>
-    <updated>2020-02-21T20:36:02+09:00</updated>
+    <updated>2020-02-24T19:47:57+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
@@ -27,7 +27,7 @@ gem &amp;quot;jwt&amp;quot;
 # クライアントから送られてきたパラメータ
 code = &amp;quot;authorizationCode&amp;quot;
 
-# アプリのID（decoded_token[0][:aud]）
+# アプリのID（decoded_token[:aud]）
 client_id = &amp;quot;com.example.app&amp;quot;
 
 # https://developer.apple.com/account/#/membership
@@ -91,7 +91,7 @@ json = JSON.parse(response.body, symbolize_names: true)
     <link rel="alternate" href="https://rono23.com/posts/verify-sign-in-with-apple-token/"/>
     <id>https://rono23.com/posts/verify-sign-in-with-apple-token/</id>
     <published>2020-02-12T00:00:00+09:00</published>
-    <updated>2020-02-21T20:36:15+09:00</updated>
+    <updated>2020-02-24T19:47:57+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
@@ -110,12 +110,12 @@ code = &amp;quot;authorizationCode&amp;quot;
 &lt;pre&gt;&lt;code&gt;url = &amp;quot;https://appleid.apple.com/auth/keys&amp;quot;
 jwks = JSON.parse(open(url).read, symbolize_names: true)
 algorithms = jwks[:keys].map { |key| key[:alg] } # or tokenのHeaderの:alg
-decoded_token = JWT.decode(token, nil, true, algorithms: algorithms, jwks: jwks)
+decoded_token = JWT.decode(token, nil, true, algorithms: algorithms, jwks: jwks).first.with_indifferent_access
 
 # 1つのJWKだけ検証したいとき
 jwk = jwks[:keys].first
 public_key = JWT::JWK.import(jwk).keypair.public_key # or `JWT::JWK::RSA.import(jwk).public_key`
-decoded_token = JWT.decode(token, public_key, true, algorithm: &amp;quot;RS256&amp;quot;)
+JWT.decode(token, public_key, true, algorithm: &amp;quot;RS256&amp;quot;)
 
 # 期限は10分なので注意
 JWT.decode(...) #=&amp;gt; JWT::ExpiredSignature: Signature has expired
@@ -126,7 +126,7 @@ JWT.decode(...) #=&amp;gt; JWT::ExpiredSignature: Signature has expired
 &lt;pre&gt;&lt;code&gt;# https://openid.net/specs/openid-connect-core-1_0.html#CodeValidation
 digest = Digest::SHA256.digest(code)
 c_hash = Base64.urlsafe_encode64(digest[0, digest.size/2], padding: false)
-decoded_token[0][&amp;quot;c_hash&amp;quot;] == c_hash
+decoded_token[:c_hash] == c_hash
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h4&gt;nonceの検証&lt;/h4&gt;
@@ -143,7 +143,7 @@ let data = rawNonce.data(using: .utf8)!
 request.nonce = SHA256.hash(data: data).compactMap { String(format: &amp;quot;%02x&amp;quot;, $0) }.joined()
 
 # サーバー
-decoded_token[0][&amp;quot;nonce&amp;quot;] == Digest::SHA256.hexdigest(rawNonce)
+decoded_token[:nonce] == Digest::SHA256.hexdigest(rawNonce)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;iOS 12以下をサポートしている場合、&lt;a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/WeakLinking.html#//apple_ref/doc/uid/20002378-107026"&gt;weak link&lt;/a&gt;する必要があるので忘れずに。&lt;/p&gt;
