@@ -4,10 +4,63 @@
   <id>https://rono23.com/posts</id>
   <link href="https://rono23.com/posts"/>
   <link href="https://rono23.com/posts/feed.xml" rel="self"/>
-  <updated>2020-02-19T00:00:00+09:00</updated>
+  <updated>2020-05-23T00:00:00+09:00</updated>
   <author>
     <name>rono23</name>
   </author>
+  <entry>
+    <title>React Native 実践本のメモ</title>
+    <link rel="alternate" href="https://rono23.com/posts/react-native-book-fixes/"/>
+    <id>https://rono23.com/posts/react-native-book-fixes/</id>
+    <published>2020-05-23T00:00:00+09:00</published>
+    <updated>2020-05-23T21:15:05+09:00</updated>
+    <author>
+      <name>rono23</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://www.amazon.co.jp/dp/B088BLSH9V/"&gt;React Native 〜 JavaScriptによるiOS／Androidアプリ開発の実践&lt;/a&gt;（&lt;a href="https://github.com/react-native-jp/praiser"&gt;GitHub&lt;/a&gt;）を読んで、0.62だと動かなかったので、取り急ぎその対応メモ。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Argument of type &amp;#39;string | ReactTestInstance&amp;#39; is not assignable to parameter of type &amp;#39;Pick&lt;ReactTestInstanceExtended, \"type\" | \"props\" | \"parent\" | \"children\" | \"find\" | \"findAll\" | \"getProp\" | \"parentNode\"&gt;&amp;#39;. Type &amp;#39;string&amp;#39; is not assignable to type &amp;#39;Pick&lt;ReactTestInstanceExtended, \"type\" | \"props\" | \"parent\" | \"children\" | \"find\" | \"findAll\" | \"getProp\" | \"parentNode\"&gt;&amp;#39;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;- fireEvent.press(container.children[0]);
++ fireEvent.press(container.children[0] as any);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Error: expect(jest.fn()).toBeCalled() Expected number of calls: &amp;gt;= 1 Received number of calls: 0&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;# https://github.com/facebook/react-native/issues/27721
+# package.json
+jest: {
+  &amp;quot;setupFilesAfterEnv&amp;quot;: [&amp;quot;./jest.setup.js&amp;quot;],
+}
+
+# jest.setup.js
+jest.mock(&amp;#39;react-native/Libraries/Components/Touchable/TouchableOpacity&amp;#39;, () =&amp;gt; &amp;#39;TouchableOpacity&amp;#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;No overload matches this call. Overload 1 of 2, &amp;#39;(props: Pick&lt;Pick&lt;ViewProps &amp; RefAttributes&lt;View&gt; &amp;amp; { children: ReactNode; style?: StyleProp&lt;ViewStyle&gt;; theme: Theme; }, \&amp;quot;style\&amp;quot; | ... 52 more ... | \&amp;quot;onTouchEndCapture\&amp;quot;&amp;gt; &amp;amp; { ...; } &amp;amp; { ...; } &amp;amp; { ...; }, \&amp;quot;onPress\&amp;quot; | ... 63 more ... | \&amp;quot;contentStyle\&amp;quot;&amp;gt; &amp;amp; { ...; }, context?: any): ReactElement&amp;lt;...&amp;gt; | ... 1 more ... | null&amp;#39;, gave the following error. Property &amp;#39;accessibilityStates&amp;#39; is missing in type &amp;#39;{ children: \&amp;quot;\&amp;quot; | Element | undefined; accessibilityLabel: string; icon: string; mode: \&amp;quot;contained\&amp;quot;; onPress: () =&amp;gt; void; }&amp;#39; but required in type &amp;#39;Pick&lt;Pick&lt;ViewProps &amp; RefAttributes&lt;View&gt; &amp;amp; { children: ReactNode; style?: StyleProp&lt;ViewStyle&gt;; theme: Theme; }, \&amp;quot;style\&amp;quot; | ...&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;# https://www.npmjs.com/package/patch-package
+# https://github.com/callstack/react-native-paper/issues/1920
+yarn add patch-package postinstall-postinstall
+vim node_modules/@types/react-native/index.d.ts
+
+# `accessibilityState?: AccessibilityState;` の下に追加
+accessibilityStates?: any; 
+
+yarn patch-package @types/react-native
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;React、React Native、TypeScript初心者なので、色々とはまる 🤣&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>Appleでサインインのアクセストークンとリフレッシュトークンの取得</title>
     <link rel="alternate" href="https://rono23.com/posts/sign-in-with-apple-tokens/"/>
@@ -306,94 +359,6 @@ brew list --versions | grep pango #=&amp;gt; pango 1.42.4_2
 
 &lt;p&gt;上半期は約30冊（漫画除く）しか読めなかったけど、あまりハズレが無かった印象。&lt;br&gt;
 定期的にブログを書いていこうと思ったけど、書くのに慣れていないので難しい…&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Capybara WebkitからHeadless Chromeに移行</title>
-    <link rel="alternate" href="https://rono23.com/posts/replace-capybara-webkit-with-headless-chrome/"/>
-    <id>https://rono23.com/posts/replace-capybara-webkit-with-headless-chrome/</id>
-    <published>2017-09-11T00:00:00+09:00</published>
-    <updated>2020-02-11T23:08:43+09:00</updated>
-    <author>
-      <name>rono23</name>
-    </author>
-    <content type="html">&lt;p&gt;インストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Gemfile
-group :test do
-  gem &amp;#39;selenium-webdriver&amp;#39;
-  gem &amp;#39;chromedriver-helper&amp;#39;
-  ...
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;chromedriver&lt;/code&gt; は &lt;code&gt;brew install chromedriver&lt;/code&gt; するか、上記のようにgemでインストールすると楽だけど、gemの場合、&lt;a href="https://github.com/flavorjones/chromedriver-helper#updating-to-latest-chromedriver"&gt;アップデート&lt;/a&gt;について少し念頭に入れておいたほうがいいかも。&lt;br&gt;
-CircleCIだとimageに &lt;code&gt;circleci/ruby:2.4.1-node-browsers&lt;/code&gt; を指定していれば &lt;code&gt;chromedriver&lt;/code&gt; とか色々と入れてくれて、特に設定等しなくても動く。&lt;/p&gt;
-
-&lt;p&gt;設定&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# spec/rails_helper.rb
-require &amp;#39;selenium/webdriver&amp;#39;
-
-...
-
-Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w(headless disable-gpu window-size=1280,800) }
-  )
-
-  Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities
-end
-Capybara.javascript_driver = :headless_chrome
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;修正が必要だったのは &lt;code&gt;trigger&lt;/code&gt;, &lt;code&gt;alert&lt;/code&gt;, &lt;code&gt;drag_to&lt;/code&gt; 周りで、最新のバージョンだと &lt;code&gt;save_and_open_screenshot&lt;/code&gt; も正常に動作しました。&lt;/p&gt;
-
-&lt;p&gt;Versions&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version
-Google Chrome 61.0.3163.79
-
-chromedriver -v
-ChromeDriver 2.32.498537
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;trigger&lt;/code&gt; の削除&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# before
-find(&amp;#39;i.icon-cancel&amp;#39;).trigger(&amp;#39;click&amp;#39;)
-
-# after
-find(&amp;#39;i.icon-cancel&amp;#39;).click
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;alert&lt;/code&gt; の修正&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# before
-click_button I18n.t(:subscribe)
-
-# after
-accept_confirm { click_button I18n.t(:subscribe) }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;drag_to&lt;/code&gt; の修正&lt;/p&gt;
-
-&lt;p&gt;以下のような条件があると &lt;code&gt;drag_to&lt;/code&gt; が動かなくなったので、CSSで &lt;code&gt;width&lt;/code&gt; を大きめに設定したら動いた。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;span class=&amp;#39;draggable&amp;#39;&amp;gt;&amp;lt;i class=&amp;#39;fa fa-arrows-v&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;&amp;lt;/span&amp;gt;&lt;/code&gt; ようなアイコンだけ&lt;/li&gt;
-&lt;li&gt;CSSで &lt;code&gt;.draggable { position: absolute; right: -100px; }&lt;/code&gt; みたいなこと&lt;/li&gt;
-&lt;li&gt;window サイズが未設定（上記設定で &lt;code&gt;window-size=1280,800&lt;/code&gt; したのはこのため）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;参考&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://developers.google.com/web/updates/2017/04/headless-chrome?hl=ja"&gt;ヘッドレス Chrome ことはじめ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://robots.thoughtbot.com/headless-feature-specs-with-chrome"&gt;Headless Capybara Feature Specs with Chrome&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://sites.google.com/a/chromium.org/chromedriver/getting-started"&gt;ChromeDriver - WebDriver for Chrome&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://github.com/flavorjones/chromedriver-helper"&gt;flavorjones/chromedriver-helper&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>
