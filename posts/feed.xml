@@ -13,7 +13,7 @@
     <link rel="alternate" href="https://rono23.com/posts/pkec-code-challenge/"/>
     <id>https://rono23.com/posts/pkec-code-challenge/</id>
     <published>2021-01-15T00:00:00+09:00</published>
-    <updated>2021-01-15T13:34:52+09:00</updated>
+    <updated>2021-01-15T14:05:23+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
@@ -47,7 +47,7 @@ code_challenge = Base64.urlsafe_encode64(OpenSSL::Digest::SHA256.digest(code_ver
 
 &lt;hr&gt;
 
-&lt;p&gt;最初、&lt;a href="https://www.hackingwithswift.com/example-code/cryptokit/how-to-calculate-the-sha-hash-of-a-string-or-data-instance"&gt;ハッシュ値を文字列&lt;/a&gt;で扱ってしまったりで少しハマったけど &lt;code&gt;CommonCrypto&lt;/code&gt; を使わずにできてよかった 🎉&lt;/p&gt;
+&lt;p&gt;最初、&lt;a href="https://www.hackingwithswift.com/example-code/cryptokit/how-to-calculate-the-sha-hash-of-a-string-or-data-instance"&gt;ハッシュ値を文字列&lt;/a&gt;で扱って少しハマったけど &lt;code&gt;CommonCrypto&lt;/code&gt; を使わずにできてよかった 🎉&lt;/p&gt;
 </content>
   </entry>
   <entry>
