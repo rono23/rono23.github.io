@@ -4,10 +4,52 @@
   <id>https://rono23.com/posts</id>
   <link href="https://rono23.com/posts"/>
   <link href="https://rono23.com/posts/feed.xml" rel="self"/>
-  <updated>2020-05-23T00:00:00+09:00</updated>
+  <updated>2021-01-15T00:00:00+09:00</updated>
   <author>
     <name>rono23</name>
   </author>
+  <entry>
+    <title>PKCEのcode_challenge生成</title>
+    <link rel="alternate" href="https://rono23.com/posts/pkec-code-challenge/"/>
+    <id>https://rono23.com/posts/pkec-code-challenge/</id>
+    <published>2021-01-15T00:00:00+09:00</published>
+    <updated>2021-01-15T13:34:52+09:00</updated>
+    <author>
+      <name>rono23</name>
+    </author>
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk&lt;br&gt;
+code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&lt;br&gt;
+&lt;a href="https://tools.ietf.org/html/rfc7636"&gt;https://tools.ietf.org/html/rfc7636&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Swift&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import CryptoKit
+
+let codeVerifier = &amp;quot;dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk&amp;quot;
+let data = Data(codeVerifier.utf8)
+let hash = SHA256.hash(data: data)
+let codeChallenge = Data(hash).base64EncodedString()
+    .replacingOccurrences(of: &amp;quot;=&amp;quot;, with: &amp;quot;&amp;quot;)
+    .replacingOccurrences(of: &amp;quot;+&amp;quot;, with: &amp;quot;-&amp;quot;)
+    .replacingOccurrences(of: &amp;quot;/&amp;quot;, with: &amp;quot;_&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ruby&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require &amp;#39;base64&amp;#39;
+require &amp;#39;openssl&amp;#39;
+
+code_verifier = &amp;quot;dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk&amp;quot;
+code_challenge = Base64.urlsafe_encode64(OpenSSL::Digest::SHA256.digest(code_verifier), padding: false)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;最初、&lt;a href="https://www.hackingwithswift.com/example-code/cryptokit/how-to-calculate-the-sha-hash-of-a-string-or-data-instance"&gt;ハッシュ値を文字列&lt;/a&gt;で扱ってしまったりで少しハマったけど &lt;code&gt;CommonCrypto&lt;/code&gt; を使わずにできてよかった 🎉&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>React Native 実践本のメモ</title>
     <link rel="alternate" href="https://rono23.com/posts/react-native-book-fixes/"/>
@@ -284,81 +326,6 @@ brew list --versions | grep pango #=&amp;gt; pango 1.42.4_2
 &lt;hr&gt;
 
 &lt;p&gt;最近、月1でBitrise or Fastlaneで躓いてる気がする… 😭&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>2019年上半期に読んで面白かった本</title>
-    <link rel="alternate" href="https://rono23.com/posts/books-i-read-in-the-first-half-of-2019/"/>
-    <id>https://rono23.com/posts/books-i-read-in-the-first-half-of-2019/</id>
-    <published>2019-06-29T00:00:00+09:00</published>
-    <updated>2020-02-11T23:08:43+09:00</updated>
-    <author>
-      <name>rono23</name>
-    </author>
-    <content type="html">&lt;h4&gt;小説&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;ストーナー（ジョン・ウィリアムズ、東江一紀訳）
-
-&lt;ul&gt;
-&lt;li&gt;助教授として生きた男性の一生を過不足なく描き、素晴らしかった。たぶん今年1番の小説かも&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;マーティン・イーデン（ジャック・ロンドン、辻井栄滋訳）
-
-&lt;ul&gt;
-&lt;li&gt;船乗りから小説家へ。労働者階級、ブルジョワ、哲学などなかなか激しかった。少し冗長的なところもあるけど、こちらも素晴らしかった&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;ジェイン・エア（シャーロット・ブロンテ、河島弘美訳）
-
-&lt;ul&gt;
-&lt;li&gt;女性の激動の一生。当時の貴族や宗教観を小説越しに見るの好きだなー&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;他にもジョン・アップダイクやジョン・チーヴァーなど、今年初めて読んだ作家さんが多かった。&lt;br&gt;
-ジョン・チーヴァーよりもレイモンド・カーヴァーのほうが好きなことがわかったけど、たぶん陰鬱の表現の差かなと思った。&lt;/p&gt;
-
-&lt;h4&gt;技術書&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;OAuth徹底入門
-
-&lt;ul&gt;
-&lt;li&gt;曖昧だったので色々と勉強になった&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Web API The Good Parts
-
-&lt;ul&gt;
-&lt;li&gt;目新しいことはなかったけど、わかりやすくまとまっていてよかった&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Swift実践入門
-
-&lt;ul&gt;
-&lt;li&gt;今年に入ってから少しずつ書いてるけどなかなか慣れない&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;iOS周りは勉強時間やコードを書いた時間が少なかったので、下半期はもっとコード書こ。&lt;/p&gt;
-
-&lt;h4&gt;その他&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;NO HARD WORK!
-
-&lt;ul&gt;
-&lt;li&gt;相変わらずのBasecamp節！&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;「エンタメ」の夜明け
-
-&lt;ul&gt;
-&lt;li&gt;ディズニーを誘致した話で、当時のビジネスが垣間見れて楽しかった。この本自体もエンタメやね&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;上半期は約30冊（漫画除く）しか読めなかったけど、あまりハズレが無かった印象。&lt;br&gt;
-定期的にブログを書いていこうと思ったけど、書くのに慣れていないので難しい…&lt;/p&gt;
 </content>
   </entry>
 </feed>
