@@ -26,7 +26,7 @@ image = File.binread(params[:image].tempfile)
 
 requests = [{
   image: { content: image },
-  # image: { source: { image_uri: &quot;https://example.com/image.png&quot; } },
+  # image: { source: { image_uri: &#39;https://example.com/image.png&#39; } },
   image_context: { language_hints: %w(ja) },
   features: [
     { type: :FACE_DETECTION },

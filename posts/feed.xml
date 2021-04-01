@@ -13,7 +13,7 @@
     <link rel="alternate" href="https://rono23.com/posts/cloud-vision-on-rails/"/>
     <id>https://rono23.com/posts/cloud-vision-on-rails/</id>
     <published>2021-04-01T00:00:00+09:00</published>
-    <updated>2021-04-01T21:04:51+09:00</updated>
+    <updated>2021-04-02T08:38:57+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
@@ -36,7 +36,7 @@ image = File.binread(params[:image].tempfile)
 
 requests = [{
   image: { content: image },
-  # image: { source: { image_uri: &amp;quot;https://example.com/image.png&amp;quot; } },
+  # image: { source: { image_uri: &amp;#39;https://example.com/image.png&amp;#39; } },
   image_context: { language_hints: %w(ja) },
   features: [
     { type: :FACE_DETECTION },
