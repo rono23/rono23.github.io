@@ -4,16 +4,72 @@
   <id>https://rono23.com/posts</id>
   <link href="https://rono23.com/posts"/>
   <link href="https://rono23.com/posts/feed.xml" rel="self"/>
-  <updated>2021-01-15T00:00:00+09:00</updated>
+  <updated>2021-04-01T00:00:00+09:00</updated>
   <author>
     <name>rono23</name>
   </author>
+  <entry>
+    <title>RailsでCloud Visionのテキスト認識と顔検出</title>
+    <link rel="alternate" href="https://rono23.com/posts/cloud-vision-on-rails/"/>
+    <id>https://rono23.com/posts/cloud-vision-on-rails/</id>
+    <published>2021-04-01T00:00:00+09:00</published>
+    <updated>2021-04-01T21:04:51+09:00</updated>
+    <author>
+      <name>rono23</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://cloud.google.com/vision/docs/quickstarts"&gt;Quickstarts&lt;/a&gt;を参考にセットアップ後、サービスアカウントの秘密鍵ファイルを適当に設置（&lt;code&gt;config/xxx.json&lt;/code&gt;）。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Gemfile
+gem &amp;#39;google-cloud-vision&amp;#39;
+
+# config/initializers/cloud_vision.rb
+credentials = JSON.parse File.read(Rails.root.join(&amp;#39;config&amp;#39;, &amp;#39;xxx.json&amp;#39;))
+Google::Cloud::Vision.configure do |config|
+  config.credentials = credentials
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;viewに &lt;code&gt;file_field :image&lt;/code&gt; みたいの書いてファイルをアップロードしてみる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# controller
+image = File.binread(params[:image].tempfile)
+
+requests = [{
+  image: { content: image },
+  # image: { source: { image_uri: &amp;quot;https://example.com/image.png&amp;quot; } },
+  image_context: { language_hints: %w(ja) },
+  features: [
+    { type: :FACE_DETECTION },
+    { type: :TEXT_DETECTION }
+  ]
+}]
+
+result = Google::Cloud::Vision.image_annotator.batch_annotate_images(requests: requests)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;簡単！&lt;code&gt;File.binread&lt;/code&gt; を知らなくて、ちょっとはまったけど…&lt;br&gt;
+&lt;a href="https://cloud.google.com/vision/docs/drag-and-drop"&gt;デモ&lt;/a&gt;でどんな感じか試せるし、レスポンスのJSONも見れて便利だけど、日本語のテキスト検出を試したい場合はローカルで &lt;code&gt;language_hints&lt;/code&gt; で &lt;code&gt;ja&lt;/code&gt; を指定して試してみるのおすすめです。精度がちょっと上がりました。&lt;/p&gt;
+
+&lt;h2&gt;参考&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://cloud.google.com/vision/docs/drag-and-drop"&gt;Try it! | Cloud Vision API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cloud.google.com/vision/docs/features-list"&gt;Features list | Cloud Vision API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://cloud.google.com/vision/docs/reference/rest/v1/Feature#type"&gt;Feature | Cloud Vision API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://googleapis.dev/ruby/google-cloud-vision-v1/latest/Google/Cloud/Vision/V1.html"&gt;Module: Google::Cloud::Vision::V1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;a href="https://aws.amazon.com/jp/rekognition/"&gt;Amazon Rekognition&lt;/a&gt;は日本語のテキスト検出がまだサポートされてなかったので今回見送ったけど、サポートされたら試してみたい。&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>PKCEのcode_challenge生成</title>
     <link rel="alternate" href="https://rono23.com/posts/pkec-code-challenge/"/>
     <id>https://rono23.com/posts/pkec-code-challenge/</id>
     <published>2021-01-15T00:00:00+09:00</published>
-    <updated>2021-01-15T14:05:23+09:00</updated>
+    <updated>2021-04-01T21:04:51+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
@@ -293,39 +349,6 @@ brew list --versions | grep pango #=&amp;gt; pango 1.42.4_2
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;追記：もっと簡単なやり方が&lt;a href="https://github.com/HazAT/badge/issues/91#issuecomment-534866597"&gt;コメント&lt;/a&gt;されてました。&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>TestFlightのテスト内容の必須文字数が変更</title>
-    <link rel="alternate" href="https://rono23.com/posts/testflight-whats-new-error/"/>
-    <id>https://rono23.com/posts/testflight-whats-new-error/</id>
-    <published>2019-07-22T00:00:00+09:00</published>
-    <updated>2020-02-11T23:08:43+09:00</updated>
-    <author>
-      <name>rono23</name>
-    </author>
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;Spaceship::UnexpectedResponse: [!] An attribute value has text that is too short. - Text for whatsNew is too short.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Bitrise上で少し前からエラーが発生するようになって調べてみたら、TestFlightのテスト内容の必須文字数が変更になったっぽい 🤔&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;テスト内容は4文字以上でなければなりません。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code&gt;App Store Connect&lt;/code&gt; &amp;gt; &lt;code&gt;TestFlight&lt;/code&gt; &amp;gt; アプリ選択 &amp;gt; &lt;code&gt;テストの詳細&lt;/code&gt; で &lt;code&gt;テスト内容&lt;/code&gt; を9文字以下で保存するとエラー（5文字以上でも同じエラーメッセージ…）。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Fastlane
-- pilot(changelog: &amp;quot;9文字以下&amp;quot;, ...)
-+ pilot(changelog: &amp;quot;10文字以上のテキスト&amp;quot;, ...)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;10文字以上に変更したら 🙆🎉&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;最近、月1でBitrise or Fastlaneで躓いてる気がする… 😭&lt;/p&gt;
 </content>
   </entry>
 </feed>
