@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.5)
+    activesupport (5.2.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -14,7 +14,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.8)
+    concurrent-ruby (1.1.9)
     contracts (0.13.0)
     dotenv (2.7.6)
     em-websocket (0.5.2)
@@ -22,10 +22,10 @@ GEM
       http_parser.rb (~> 0.6.0)
     erubis (2.7.0)
     eventmachine (1.2.7)
-    execjs (2.7.0)
+    execjs (2.8.1)
     fast_blank (1.0.0)
-    fastimage (2.2.3)
-    ffi (1.15.0)
+    fastimage (2.2.4)
+    ffi (1.15.1)
     haml (5.2.1)
       temple (>= 0.8.0)
       tilt
@@ -80,7 +80,7 @@ GEM
       middleman-core (>= 3.2)
       net-sftp
       ptools
-    middleman-livereload (3.4.6)
+    middleman-livereload (3.4.7)
       em-websocket (~> 0.5.1)
       middleman-core (>= 3.3)
       rack-livereload (~> 0.3.15)
@@ -100,11 +100,11 @@ GEM
     rack (2.2.3)
     rack-livereload (0.3.17)
       rack
-    rb-fsevent (0.10.4)
+    rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redcarpet (3.5.1)
-    rexml (3.2.4)
+    rexml (3.2.5)
     sassc (2.4.0)
       ffi (~> 1.9)
     servolux (0.13.0)
@@ -121,7 +121,7 @@ GEM
       execjs (>= 0.3.0, < 3)
 
 PLATFORMS
-  x86_64-darwin-19
+  x86_64-darwin-20
 
 DEPENDENCIES
   builder
@@ -133,4 +133,4 @@ DEPENDENCIES
   slim
 
 BUNDLED WITH
-   2.2.6
+   2.2.17
