@@ -69,7 +69,7 @@ result = Google::Cloud::Vision.image_annotator.batch_annotate_images(requests: r
     <link rel="alternate" href="https://rono23.com/posts/pkec-code-challenge/"/>
     <id>https://rono23.com/posts/pkec-code-challenge/</id>
     <published>2021-01-15T00:00:00+09:00</published>
-    <updated>2021-04-01T21:04:51+09:00</updated>
+    <updated>2022-03-13T14:35:31+09:00</updated>
     <author>
       <name>rono23</name>
     </author>
@@ -95,10 +95,10 @@ let codeChallenge = Data(hash).base64EncodedString()
 &lt;p&gt;Ruby&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;require &amp;#39;base64&amp;#39;
-require &amp;#39;openssl&amp;#39;
+require &amp;#39;digest&amp;#39;
 
 code_verifier = &amp;quot;dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk&amp;quot;
-code_challenge = Base64.urlsafe_encode64(OpenSSL::Digest::SHA256.digest(code_verifier), padding: false)
+code_challenge = Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier), padding: false)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;hr&gt;

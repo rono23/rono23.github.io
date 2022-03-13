@@ -29,13 +29,13 @@ let codeChallenge = Data(hash).base64EncodedString()
 <p>Ruby</p>
 
 <pre><code>require &#39;base64&#39;
-require &#39;openssl&#39;
+require &#39;digest&#39;
 
 code_verifier = &quot;dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk&quot;
-code_challenge = Base64.urlsafe_encode64(OpenSSL::Digest::SHA256.digest(code_verifier), padding: false)
+code_challenge = Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier), padding: false)
 </code></pre>
 
 <hr>
 
 <p>最初、<a href="https://www.hackingwithswift.com/example-code/cryptokit/how-to-calculate-the-sha-hash-of-a-string-or-data-instance">ハッシュ値を文字列</a>で扱って少しハマったけど <code>CommonCrypto</code> を使わずにできてよかった 🎉</p>
-</div><div class="post-comment"><p><a href="https://github.com/rono23/rono23.github.io/issues/new?title=[pkec-code-challenge]%20">Post a comment on GitHub</a></p></div><div class="post-tags"><ul class="inline"><li>Tags:</li><li><a href="/posts/tags/ios/">ios</a></li><li><a href="/posts/tags/ruby/">ruby</a></li></ul></div></div></div><div class="footer"><div class="l-constrained"><div class="copy">&copy; 2021 rono23</div></div></div></body></html>
+</div><div class="post-comment"><p><a href="https://github.com/rono23/rono23.github.io/issues/new?title=[pkec-code-challenge]%20">Post a comment on GitHub</a></p></div><div class="post-tags"><ul class="inline"><li>Tags:</li><li><a href="/posts/tags/ios/">ios</a></li><li><a href="/posts/tags/ruby/">ruby</a></li></ul></div></div></div><div class="footer"><div class="l-constrained"><div class="copy">&copy; 2022 rono23</div></div></div></body></html>
