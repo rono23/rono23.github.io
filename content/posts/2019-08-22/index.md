@@ -1,0 +1,31 @@
++++
+title = "fastlaneのadd_badgeで数字が潰れる"
+date = "2019-08-22"
+tags = ["ios"]
+aliases = ["/posts/shrunk-badge/"]
++++
+
+アプリのアイコンにビルド番号などを追加してたけど、その数字が[潰れる問題](https://github.com/HazAT/badge/issues/91)が発生。
+`pango 1.42.4` だとOKとコメントがあったので、取り急ぎ古いバージョンをインストールして対処できた。
+
+```
+cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
+
+## You need to fetch when commit log was grafted
+# git log pango.rb
+# git fetch --depth 50000
+
+git checkout a8ac7ea5fe9339558c9fbe49acaa1a2452bcd4d0 pango.rb
+brew reinstall pango
+brew pin pango
+git reset --hard
+brew list --versions | grep pango #=> pango 1.42.4_2
+```
+
+`pin` したので、対応されたら `unpin` して更新すればOK。
+
+```
+brew unpin pango
+```
+
+追記：もっと簡単なやり方が[コメント](https://github.com/HazAT/badge/issues/91#issuecomment-534866597)されてました。

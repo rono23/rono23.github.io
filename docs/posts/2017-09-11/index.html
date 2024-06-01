@@ -1,0 +1,60 @@
+<!doctype html><html class="not-ready lg:text-base" style=--bg:#faf8f1 lang=en-us><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><title>Capybara WebkitからHeadless Chromeに移行 - rono23</title>
+<meta name=theme-color><meta name=description content="インストール
+# Gemfile group :test do gem 'selenium-webdriver' gem 'chromedriver-helper' ... end chromedriver は brew install chromedriver するか、上記のようにgemでインストールすると楽だけど、gemの場合、アップデートについて少し念頭に入れておいたほうがいいかも。 CircleCIだとimageに circleci/ruby:2.4.1-node-browsers を指定していれば chromedriver とか色々と入れてくれて、特に設定等しなくても動く。
+設定
+# spec/rails_helper.rb require 'selenium/webdriver' ... Capybara.register_driver :headless_chrome do |app| capabilities = Selenium::WebDriver::Remote::Capabilities.chrome( chromeOptions: { args: %w(headless disable-gpu window-size=1280,800) } ) Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities end Capybara.javascript_driver = :headless_chrome 修正が必要だったのは trigger, alert, drag_to 周りで、最新のバージョンだと save_and_open_screenshot も正常に動作しました。
+Versions
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version Google Chrome 61.0.3163.79 chromedriver -v ChromeDriver 2."><meta name=author content="rono23"><link rel="preload stylesheet" as=style href=https://rono23.com/main.min.css><link rel=preload as=image href=https://rono23.com/theme.svg><script defer src=https://rono23.com/highlight.min.js onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://rono23.com/favicon.ico><link rel=apple-touch-icon href=https://rono23.com/apple-touch-icon.png><meta name=generator content="Hugo 0.126.1"><script async src="https://www.googletagmanager.com/gtag/js?id=G-M43VSP1QGH"></script><script>var dnt,doNotTrack=!1;if(!1&&(dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes"),!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-M43VSP1QGH")}</script><meta itemprop=name content="Capybara WebkitからHeadless Chromeに移行"><meta itemprop=description content="インストール
+# Gemfile group :test do gem 'selenium-webdriver' gem 'chromedriver-helper' ... end chromedriver は brew install chromedriver するか、上記のようにgemでインストールすると楽だけど、gemの場合、アップデートについて少し念頭に入れておいたほうがいいかも。 CircleCIだとimageに circleci/ruby:2.4.1-node-browsers を指定していれば chromedriver とか色々と入れてくれて、特に設定等しなくても動く。
+設定
+# spec/rails_helper.rb require 'selenium/webdriver' ... Capybara.register_driver :headless_chrome do |app| capabilities = Selenium::WebDriver::Remote::Capabilities.chrome( chromeOptions: { args: %w(headless disable-gpu window-size=1280,800) } ) Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities end Capybara.javascript_driver = :headless_chrome 修正が必要だったのは trigger, alert, drag_to 周りで、最新のバージョンだと save_and_open_screenshot も正常に動作しました。
+Versions
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version Google Chrome 61.0.3163.79 chromedriver -v ChromeDriver 2."><meta itemprop=datePublished content="2017-09-11T00:00:00+00:00"><meta itemprop=dateModified content="2017-09-11T00:00:00+00:00"><meta itemprop=wordCount content="135"><meta itemprop=keywords content="Rails"><meta property="og:url" content="https://rono23.com/posts/2017-09-11/"><meta property="og:site_name" content="rono23"><meta property="og:title" content="Capybara WebkitからHeadless Chromeに移行"><meta property="og:description" content="インストール
+# Gemfile group :test do gem 'selenium-webdriver' gem 'chromedriver-helper' ... end chromedriver は brew install chromedriver するか、上記のようにgemでインストールすると楽だけど、gemの場合、アップデートについて少し念頭に入れておいたほうがいいかも。 CircleCIだとimageに circleci/ruby:2.4.1-node-browsers を指定していれば chromedriver とか色々と入れてくれて、特に設定等しなくても動く。
+設定
+# spec/rails_helper.rb require 'selenium/webdriver' ... Capybara.register_driver :headless_chrome do |app| capabilities = Selenium::WebDriver::Remote::Capabilities.chrome( chromeOptions: { args: %w(headless disable-gpu window-size=1280,800) } ) Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities end Capybara.javascript_driver = :headless_chrome 修正が必要だったのは trigger, alert, drag_to 周りで、最新のバージョンだと save_and_open_screenshot も正常に動作しました。
+Versions
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version Google Chrome 61.0.3163.79 chromedriver -v ChromeDriver 2."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2017-09-11T00:00:00+00:00"><meta property="article:modified_time" content="2017-09-11T00:00:00+00:00"><meta property="article:tag" content="Rails"><meta name=twitter:card content="summary"><meta name=twitter:title content="Capybara WebkitからHeadless Chromeに移行"><meta name=twitter:description content="インストール
+# Gemfile group :test do gem 'selenium-webdriver' gem 'chromedriver-helper' ... end chromedriver は brew install chromedriver するか、上記のようにgemでインストールすると楽だけど、gemの場合、アップデートについて少し念頭に入れておいたほうがいいかも。 CircleCIだとimageに circleci/ruby:2.4.1-node-browsers を指定していれば chromedriver とか色々と入れてくれて、特に設定等しなくても動く。
+設定
+# spec/rails_helper.rb require 'selenium/webdriver' ... Capybara.register_driver :headless_chrome do |app| capabilities = Selenium::WebDriver::Remote::Capabilities.chrome( chromeOptions: { args: %w(headless disable-gpu window-size=1280,800) } ) Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities end Capybara.javascript_driver = :headless_chrome 修正が必要だったのは trigger, alert, drag_to 周りで、最新のバージョンだと save_and_open_screenshot も正常に動作しました。
+Versions
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version Google Chrome 61.0.3163.79 chromedriver -v ChromeDriver 2."><link rel=canonical href=https://rono23.com/posts/2017-09-11/></head><body class="text-black duration-200 ease-out dark:text-white"><header class="mx-auto flex h-[4.5rem] max-w-3xl px-8 lg:justify-center"><div class="relative z-50 mr-auto flex items-center"><a class="-translate-x-[1px] -translate-y-[1px] text-2xl font-semibold" href=https://rono23.com/>rono23</a><div class="btn-dark text-[0] ml-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]" role=button aria-label=Dark></div></div><div class="btn-menu relative z-50 -mr-8 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden" role=button aria-label=Menu></div><script>const htmlClass=document.documentElement.classList;setTimeout(()=>{htmlClass.remove("not-ready")},10);const btnMenu=document.querySelector(".btn-menu");btnMenu.addEventListener("click",()=>{htmlClass.toggle("open")});const metaTheme=document.querySelector('meta[name="theme-color"]'),lightBg="#faf8f1".replace(/"/g,""),setDark=e=>{metaTheme.setAttribute("content",e?"#000":lightBg),htmlClass[e?"add":"remove"]("dark"),localStorage.setItem("dark",e)},darkScheme=window.matchMedia("(prefers-color-scheme: dark)");if(htmlClass.contains("dark"))setDark(!0);else{const e=localStorage.getItem("dark");setDark(e?e==="true":darkScheme.matches)}darkScheme.addEventListener("change",e=>{setDark(e.matches)});const btnDark=document.querySelector(".btn-dark");btnDark.addEventListener("click",()=>{setDark(localStorage.getItem("dark")!=="true")})</script><div class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full select-none flex-col justify-center pb-16 duration-200 dark:bg-black lg:static lg:h-auto lg:flex-row lg:!bg-transparent lg:pb-0 lg:transition-none"><nav class="lg:ml-12 lg:flex lg:flex-row lg:items-center lg:space-x-6"><a class="block text-center text-2xl leading-[5rem] lg:text-base lg:font-normal" href=/about/>About</a></nav></div></header><main class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl px-8 pb-16 pt-12 dark:prose-invert"><article><header class=mb-16><h1 class="!my-0 pb-2.5">Capybara WebkitからHeadless Chromeに移行</h1><div class="text-sm antialiased opacity-60"><time>Sep 11, 2017</time></div></header><section><p>インストール</p><pre tabindex=0><code># Gemfile
+group :test do
+  gem &#39;selenium-webdriver&#39;
+  gem &#39;chromedriver-helper&#39;
+  ...
+end
+</code></pre><p><code>chromedriver</code> は <code>brew install chromedriver</code> するか、上記のようにgemでインストールすると楽だけど、gemの場合、<a href=https://github.com/flavorjones/chromedriver-helper#updating-to-latest-chromedriver>アップデート</a>について少し念頭に入れておいたほうがいいかも。
+CircleCIだとimageに <code>circleci/ruby:2.4.1-node-browsers</code> を指定していれば <code>chromedriver</code> とか色々と入れてくれて、特に設定等しなくても動く。</p><p>設定</p><pre tabindex=0><code># spec/rails_helper.rb
+require &#39;selenium/webdriver&#39;
+
+...
+
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu window-size=1280,800) }
+  )
+
+  Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities
+end
+Capybara.javascript_driver = :headless_chrome
+</code></pre><p>修正が必要だったのは <code>trigger</code>, <code>alert</code>, <code>drag_to</code> 周りで、最新のバージョンだと <code>save_and_open_screenshot</code> も正常に動作しました。</p><p>Versions</p><pre tabindex=0><code>/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version
+Google Chrome 61.0.3163.79
+
+chromedriver -v
+ChromeDriver 2.32.498537
+</code></pre><p><code>trigger</code> の削除</p><pre tabindex=0><code># before
+find(&#39;i.icon-cancel&#39;).trigger(&#39;click&#39;)
+
+# after
+find(&#39;i.icon-cancel&#39;).click
+</code></pre><p><code>alert</code> の修正</p><pre tabindex=0><code># before
+click_button I18n.t(:subscribe)
+
+# after
+accept_confirm { click_button I18n.t(:subscribe) }
+</code></pre><p><code>drag_to</code> の修正</p><p>以下のような条件があると <code>drag_to</code> が動かなくなったので、CSSで <code>width</code> を大きめに設定したら動いた。</p><ul><li><code>&lt;span class='draggable'>&lt;i class='fa fa-arrows-v'>&lt;/i>&lt;/span></code> ようなアイコンだけ</li><li>CSSで <code>.draggable { position: absolute; right: -100px; }</code> みたいなこと</li><li>window サイズが未設定（上記設定で <code>window-size=1280,800</code> したのはこのため）</li></ul><p>参考</p><ul><li><a href="https://developers.google.com/web/updates/2017/04/headless-chrome?hl=ja">ヘッドレス Chrome ことはじめ</a></li><li><a href=https://robots.thoughtbot.com/headless-feature-specs-with-chrome>Headless Capybara Feature Specs with Chrome</a></li><li><a href=https://sites.google.com/a/chromium.org/chromedriver/getting-started>ChromeDriver - WebDriver for Chrome</a></li><li><a href=https://github.com/flavorjones/chromedriver-helper>flavorjones/chromedriver-helper</a></li></ul></section><footer class="mt-12 flex flex-wrap"><a class="mb-1.5 mr-1.5 rounded-lg bg-black/[3%] px-5 py-1.5 no-underline dark:bg-white/[8%]" href=https://rono23.com/tags/rails>rails</a></footer><nav class="mt-24 flex rounded-lg bg-black/[3%] text-lg dark:bg-white/[8%]"><a class="flex w-1/2 items-center rounded-l-md p-6 pr-3 font-semibold no-underline hover:bg-black/[2%] dark:hover:bg-white/[3%]" href=https://rono23.com/posts/2019-06-29/><span class=mr-1.5>←</span><span>2019年上半期に読んで面白かった本</span></a>
+<a class="ml-auto flex w-1/2 items-center justify-end rounded-r-md p-6 pl-3 font-semibold no-underline hover:bg-black/[2%] dark:hover:bg-white/[3%]" href=https://rono23.com/posts/2017-09-08/><span>Webpackerで入れたVueにESLintを使う</span><span class=ml-1.5>→</span></a></nav></article></main><footer class="opaco mx-auto flex h-[4.5rem] max-w-3xl items-center px-8 text-[0.9em] opacity-60"><div class=mr-auto>&copy; 2024
+<a class=link href=https://rono23.com/>rono23</a></div><a class="link mx-6" href=https://gohugo.io/ rel=noopener target=_blank>Powered by Hugo️️</a>️
+<a class=link href=https://github.com/nanxiaobei/hugo-paper rel=noopener target=_blank>✎ Paper</a></footer></body></html>

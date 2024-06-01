@@ -1,0 +1,45 @@
++++
+title = "Webpackerで入れたVueにESLintを使う"
+date = "2017-09-08"
+tags = ["rails"]
+aliases = ["/posts/vue-with-eslint-on-webpacker/"]
++++
+
+インストール
+
+```
+yarn add --dev eslint eslint-loader eslint-plugin-import eslint-config-airbnb-base eslint-plugin-vue@beta
+```
+
+設定
+
+```
+// .eslintrc
+{
+  env: {
+    browser: true
+  },
+  'extends': [
+    'airbnb-base',
+    'plugin:vue/recommended'
+  ]
+}
+```
+
+```
+// config/webpack/development.js
+const environment = require('./environment')
+
+environment.loaders.set('eslint', {
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  options: {
+    failOnWarning: true
+  }
+})
+
+module.exports = environment.toWebpackConfig()
+```
+
+`options` の設定は[公式](https://github.com/MoOx/eslint-loader#options)を参考に、例えば `failOnWarning: true` だとbuildに失敗してコンソールやログにエラーが表示されて、 `failOnWarning: false` にするとbuildはとおってログにだけメッセージが残る。

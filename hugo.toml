@@ -1,0 +1,15 @@
+baseURL = 'https://rono23.com/'
+languageCode = 'en-us'
+title = 'rono23'
+theme = 'paper'
+publishDir = 'docs'
+googleAnalytics = 'G-M43VSP1QGH'
+
+[params]
+monoDarkIcon = true
+
+[menu]
+  [[menu.main]]
+    identifier = 'about'
+    name = 'About'
+    url = '/about/'

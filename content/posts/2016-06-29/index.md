@@ -1,0 +1,52 @@
++++
+title = "Upgrading to Middleman 4"
+date = "2016-06-29"
+tags = ["middleman"]
+aliases = ["/posts/upgrading-to-middleman-4/"]
++++
+
+### Global variable
+
+```
+# config.rb
+set :site_title, 'rono23'
+
+# before
+site_title
+
+# after
+config.site_title
+```
+
+### Template local variable
+
+```
+# before
+data.page.title
+
+# after
+current_resource.data.title
+```
+
+### Deployment
+
+```
+# Gemfile
+gem 'middleman-deploy', '~> 2.0.0.pre.alpha'
+
+# before
+activate :deploy do |deploy|
+  deploy.method = :git
+  deploy.branch = 'master'
+end
+
+# after
+activate :deploy do |deploy|
+  deploy.deploy_method = :git
+  deploy.branch = 'master'
+end
+```
+
+---
+
+Related: [Middleman: Upgrading to v4](https://middlemanapp.com/basics/upgrade-v4/)

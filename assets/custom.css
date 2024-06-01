@@ -1,0 +1,122 @@
+/* Place custom css here. */
+
+.font-bold {
+  font-weight: 400;
+}
+
+.my-10 {
+  margin-top: 1.7rem !important;
+  margin-bottom: 1.7rem !important;
+}
+
+body header:first-child {
+  margin-top: 3rem !important;
+}
+
+body header:first-child div[role=button] {
+  background-size: cover;
+  width: 19px;
+  height: 19px;
+  resize: both;
+}
+
+body header:first-child .btn-menu {
+  margin-top: 1.4rem !important;
+  margin-right: .1rem !important;
+}
+
+main section h2 {
+  font-size: 1.2em !important;
+}
+
+main.prose {
+  padding-top: 1.6rem !important;
+}
+
+article {
+  margin-top: -1.8rem !important;
+}
+
+article header h1 {
+  font-size: 1.5em !important;
+  font-weight: 600 !important;
+}
+
+article header.mb-16 {
+  margin-bottom: 1.2rem;
+}
+
+article blockquote {
+  quotes: none !important;
+  font-weight: 300 !important;
+  line-height: 1.4;
+}
+
+article h1 code,
+article h2 code,
+article h3 code,
+article h4 code,
+article h5 code,
+article p code,
+article li code {
+  padding: 0px 6px;
+  border-radius: 4px;
+  background: #e5e5e5;
+}
+
+html.dark article h1 code,
+html.dark article h2 code,
+html.dark article h3 code,
+html.dark article h4 code,
+html.dark article h5 code,
+html.dark article p code,
+html.dark article li code {
+  background: #333;
+}
+
+article h1 code::before,
+article h2 code::before,
+article h3 code::before,
+article h4 code::before,
+article h5 code::before,
+article p code::before,
+article li code::before {
+  content: "" !important;
+}
+
+article h1 code::after,
+article h2 code::after,
+article h3 code::after,
+article h4 code::after,
+article h5 code::after,
+article p code::after,
+article li code::after {
+  content: "" !important;
+}
+
+article ol li,
+article ul li,
+article ul li ul {
+  margin-top: .1em !important;
+  margin-bottom: .1em !important;
+}
+
+article footer a {
+  margin-right: 0.9rem !important;
+  padding-top: .15rem !important;
+  padding-bottom: .15rem !important;
+  font-size: 0.9em;
+}
+
+article nav a {
+  font-size: 0.9em;
+}
+
+main nav a.btn {
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+main h1.mb-16 {
+  text-transform: lowercase !important;
+}

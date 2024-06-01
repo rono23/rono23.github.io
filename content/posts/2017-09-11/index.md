@@ -1,0 +1,88 @@
++++
+title = "Capybara WebkitからHeadless Chromeに移行"
+date = "2017-09-11"
+tags = ["rails"]
+aliases = ["/posts/replace-capybara-webkit-with-headless-chrome/"]
++++
+
+インストール
+
+```
+# Gemfile
+group :test do
+  gem 'selenium-webdriver'
+  gem 'chromedriver-helper'
+  ...
+end
+```
+
+`chromedriver` は `brew install chromedriver` するか、上記のようにgemでインストールすると楽だけど、gemの場合、[アップデート](https://github.com/flavorjones/chromedriver-helper#updating-to-latest-chromedriver)について少し念頭に入れておいたほうがいいかも。
+CircleCIだとimageに `circleci/ruby:2.4.1-node-browsers` を指定していれば `chromedriver` とか色々と入れてくれて、特に設定等しなくても動く。
+
+
+設定
+
+```
+# spec/rails_helper.rb
+require 'selenium/webdriver'
+
+...
+
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu window-size=1280,800) }
+  )
+
+  Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities
+end
+Capybara.javascript_driver = :headless_chrome
+```
+
+修正が必要だったのは `trigger`, `alert`, `drag_to` 周りで、最新のバージョンだと `save_and_open_screenshot` も正常に動作しました。
+
+Versions
+
+```
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version
+Google Chrome 61.0.3163.79
+
+chromedriver -v
+ChromeDriver 2.32.498537
+```
+
+
+`trigger` の削除
+
+```
+# before
+find('i.icon-cancel').trigger('click')
+
+# after
+find('i.icon-cancel').click
+```
+
+`alert` の修正
+
+```
+# before
+click_button I18n.t(:subscribe)
+
+# after
+accept_confirm { click_button I18n.t(:subscribe) }
+```
+
+`drag_to` の修正
+
+以下のような条件があると `drag_to` が動かなくなったので、CSSで `width` を大きめに設定したら動いた。
+
+- `<span class='draggable'><i class='fa fa-arrows-v'></i></span>` ようなアイコンだけ
+- CSSで `.draggable { position: absolute; right: -100px; }` みたいなこと
+- window サイズが未設定（上記設定で `window-size=1280,800` したのはこのため）
+
+
+参考
+
+- [ヘッドレス Chrome ことはじめ](https://developers.google.com/web/updates/2017/04/headless-chrome?hl=ja)
+- [Headless Capybara Feature Specs with Chrome](https://robots.thoughtbot.com/headless-feature-specs-with-chrome)
+- [ChromeDriver - WebDriver for Chrome](https://sites.google.com/a/chromium.org/chromedriver/getting-started)
+- [flavorjones/chromedriver-helper](https://github.com/flavorjones/chromedriver-helper)
