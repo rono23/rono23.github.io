@@ -5,7 +5,7 @@
 ```
 git clone git@github.com:rono23/rono23.github.io.git
 cd rono23.github.io
-hugo server
+hugo server -F
 ```
 
 ## Generate HTML

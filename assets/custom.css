@@ -101,6 +101,14 @@ article ul li ul {
   margin-bottom: .1em !important;
 }
 
+article img {
+  border-radius: 4px;
+}
+
+article img:hover {
+  opacity: 0.9;
+}
+
 article footer a {
   margin-right: 0.9rem !important;
   padding-top: .15rem !important;
@@ -119,4 +127,24 @@ main nav a.btn {
 
 main h1.mb-16 {
   text-transform: lowercase !important;
+}
+
+figure.image-width-49 {
+  width: 49% !important;
+  display: inline-block !important;
+  margin: 0 0 2rem 0 !important;
+  float: left;
+}
+
+figure.float-right {
+  float: right;
+}
+
+figure.float-right + p {
+  clear: both;
+}
+
+.prose :where(img):not(:where([class~=not-prose],[class~=not-prose] *)),
+.prose :where(figure):not(:where([class~=not-prose],[class~=not-prose] *)) {
+  margin: 0 !important;
 }

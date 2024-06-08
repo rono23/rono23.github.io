@@ -3,6 +3,7 @@ languageCode = 'en-us'
 title = 'rono23'
 theme = 'paper'
 publishDir = 'docs'
+timeZone = 'Asia/Tokyo'
 googleAnalytics = 'G-M43VSP1QGH'
 
 [params]
